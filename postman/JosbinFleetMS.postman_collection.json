@@ -1,0 +1,169 @@
+{
+  "info": {
+    "_postman_id": "josbin-fleet-ms-collection-v1",
+    "name": "Josbin Fleet MS API v1",
+    "description": "Fleet Management System — Auth, Vehicles, Drivers, Services, Insurance, Inspections, Fuel Logs, Trip Logs, PDF Reports, Notifications",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000/api", "type": "string" },
+    { "key": "token",    "value": "",                          "type": "string",  "description": "Set this after calling Login" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "event": [{ "listen": "test", "script": { "exec": ["const r = pm.response.json(); if(r.token) pm.collectionVariables.set('token', r.token);"], "type": "text/javascript" }}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Admin User\",\n  \"email\": \"admin@josbin.sr\",\n  \"password\": \"password\",\n  \"password_confirmation\": \"password\"\n}" },
+            "url": { "raw": "{{base_url}}/register", "host": ["{{base_url}}"], "path": ["register"] }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [{ "listen": "test", "script": { "exec": ["const r = pm.response.json(); if(r.token) pm.collectionVariables.set('token', r.token);"], "type": "text/javascript" }}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"admin@josbin.sr\",\n  \"password\": \"password\"\n}" },
+            "url": { "raw": "{{base_url}}/login", "host": ["{{base_url}}"], "path": ["login"] }
+          }
+        },
+        {
+          "name": "Me (current user)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/me", "host": ["{{base_url}}"], "path": ["me"] }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/logout", "host": ["{{base_url}}"], "path": ["logout"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "item": [
+        {
+          "name": "Stats",
+          "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }], "url": { "raw": "{{base_url}}/dashboard/stats", "host": ["{{base_url}}"], "path": ["dashboard", "stats"] }}
+        },
+        {
+          "name": "Alerts",
+          "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }], "url": { "raw": "{{base_url}}/dashboard/alerts", "host": ["{{base_url}}"], "path": ["dashboard", "alerts"] }}
+        }
+      ]
+    },
+    {
+      "name": "Vehicles",
+      "item": [
+        { "name": "List", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/vehicles?status=active", "host": ["{{base_url}}"], "path": ["vehicles"], "query": [{ "key": "status", "value": "active" }] }}},
+        { "name": "Get", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/vehicles/1", "host": ["{{base_url}}"], "path": ["vehicles","1"] }}},
+        { "name": "Create", "request": { "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"plate_number\": \"SRN-0100\",\n  \"make\": \"Toyota\",\n  \"model\": \"Hilux\",\n  \"year\": 2022,\n  \"color\": \"White\",\n  \"vin\": \"VIN100TEST001\",\n  \"status\": \"active\",\n  \"fuel_type\": \"diesel\",\n  \"mileage\": 15000,\n  \"next_service_date\": \"2026-06-01\",\n  \"next_inspection_date\": \"2026-08-01\",\n  \"insurance_expiry\": \"2027-01-01\"\n}" }, "url": { "raw": "{{base_url}}/vehicles", "host": ["{{base_url}}"], "path": ["vehicles"] }}},
+        { "name": "Update", "request": { "method": "PUT", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"plate_number\": \"SRN-0100\",\n  \"make\": \"Toyota\",\n  \"model\": \"Hilux\",\n  \"year\": 2022,\n  \"color\": \"Black\",\n  \"vin\": \"VIN100TEST001\",\n  \"status\": \"maintenance\",\n  \"fuel_type\": \"diesel\",\n  \"mileage\": 16500\n}" }, "url": { "raw": "{{base_url}}/vehicles/1", "host": ["{{base_url}}"], "path": ["vehicles","1"] }}},
+        { "name": "Delete", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": { "raw": "{{base_url}}/vehicles/1", "host": ["{{base_url}}"], "path": ["vehicles","1"] }}}
+      ]
+    },
+    {
+      "name": "Drivers",
+      "item": [
+        { "name": "List", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/drivers", "host": ["{{base_url}}"], "path": ["drivers"] }}},
+        { "name": "Create", "request": { "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"email\": \"john.doe@fleet.sr\",\n  \"phone\": \"+59712345001\",\n  \"whatsapp\": \"+59712345001\",\n  \"license_number\": \"DL-SR-001\",\n  \"license_expiry\": \"2028-01-15\",\n  \"address\": \"Paramaribo, Suriname\",\n  \"status\": \"active\"\n}" }, "url": { "raw": "{{base_url}}/drivers", "host": ["{{base_url}}"], "path": ["drivers"] }}},
+        { "name": "Update", "request": { "method": "PUT", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"email\": \"john.doe@fleet.sr\",\n  \"phone\": \"+59712345001\",\n  \"whatsapp\": \"+59712345001\",\n  \"license_number\": \"DL-SR-001\",\n  \"license_expiry\": \"2028-01-15\",\n  \"address\": \"Paramaribo, Suriname\",\n  \"status\": \"active\"\n}" }, "url": { "raw": "{{base_url}}/drivers/1", "host": ["{{base_url}}"], "path": ["drivers","1"] }}},
+        { "name": "Delete", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": { "raw": "{{base_url}}/drivers/1", "host": ["{{base_url}}"], "path": ["drivers","1"] }}}
+      ]
+    },
+    {
+      "name": "Services",
+      "item": [
+        { "name": "List", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/services?status=scheduled", "host": ["{{base_url}}"], "path": ["services"], "query": [{ "key": "status", "value": "scheduled" }] }}},
+        { "name": "Create", "request": { "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"vehicle_id\": 1,\n  \"type\": \"oil_change\",\n  \"description\": \"Regular oil and filter change\",\n  \"service_date\": \"2026-04-10\",\n  \"next_service_date\": \"2026-07-10\",\n  \"next_service_mileage\": 95000,\n  \"cost\": 350.00,\n  \"garage\": \"AutoServ Paramaribo\",\n  \"status\": \"scheduled\"\n}" }, "url": { "raw": "{{base_url}}/services", "host": ["{{base_url}}"], "path": ["services"] }}},
+        { "name": "Update Status to Completed", "request": { "method": "PUT", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"vehicle_id\": 1,\n  \"type\": \"oil_change\",\n  \"service_date\": \"2026-04-10\",\n  \"status\": \"completed\"\n}" }, "url": { "raw": "{{base_url}}/services/1", "host": ["{{base_url}}"], "path": ["services","1"] }}}
+      ]
+    },
+    {
+      "name": "Insurance",
+      "item": [
+        { "name": "List", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/insurance", "host": ["{{base_url}}"], "path": ["insurance"] }}},
+        { "name": "Create", "request": { "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"vehicle_id\": 1,\n  \"provider\": \"Assuria NV\",\n  \"policy_number\": \"ASS-2026-0100\",\n  \"type\": \"comprehensive\",\n  \"start_date\": \"2026-04-01\",\n  \"expiry_date\": \"2027-04-01\",\n  \"premium_amount\": 4800.00,\n  \"coverage_amount\": 200000.00,\n  \"status\": \"active\"\n}" }, "url": { "raw": "{{base_url}}/insurance", "host": ["{{base_url}}"], "path": ["insurance"] }}}
+      ]
+    },
+    {
+      "name": "Inspections",
+      "item": [
+        { "name": "List", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/inspections", "host": ["{{base_url}}"], "path": ["inspections"] }}},
+        { "name": "Create", "request": { "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"vehicle_id\": 1,\n  \"type\": \"annual\",\n  \"inspection_date\": \"2026-04-15\",\n  \"next_inspection_date\": \"2026-10-15\",\n  \"result\": \"pass\",\n  \"inspector\": \"MVD Paramaribo\",\n  \"location\": \"Zwartenhovenbrugstraat\",\n  \"cost\": 250.00\n}" }, "url": { "raw": "{{base_url}}/inspections", "host": ["{{base_url}}"], "path": ["inspections"] }}}
+      ]
+    },
+    {
+      "name": "Fuel Logs",
+      "item": [
+        { "name": "List All", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/fuel-logs", "host": ["{{base_url}}"], "path": ["fuel-logs"] }}},
+        { "name": "List by Vehicle", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/fuel-logs?vehicle_id=1", "host": ["{{base_url}}"], "path": ["fuel-logs"], "query": [{ "key": "vehicle_id", "value": "1" }] }}},
+        { "name": "Log Fuel Fill", "request": { "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"vehicle_id\": 1,\n  \"driver_id\": 1,\n  \"fill_date\": \"2026-04-01\",\n  \"liters\": 65.5,\n  \"cost_per_liter\": 4.85,\n  \"odometer\": 85000,\n  \"fuel_type\": \"diesel\",\n  \"station\": \"SurPetrol Paramaribo North\",\n  \"full_tank\": true,\n  \"notes\": \"\"\n}" }, "url": { "raw": "{{base_url}}/fuel-logs", "host": ["{{base_url}}"], "path": ["fuel-logs"] }}},
+        { "name": "Update", "request": { "method": "PUT", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"vehicle_id\": 1,\n  \"driver_id\": 1,\n  \"fill_date\": \"2026-04-01\",\n  \"liters\": 70.0,\n  \"cost_per_liter\": 4.90,\n  \"odometer\": 85000,\n  \"fuel_type\": \"diesel\",\n  \"station\": \"SurPetrol Paramaribo North\",\n  \"full_tank\": true\n}" }, "url": { "raw": "{{base_url}}/fuel-logs/1", "host": ["{{base_url}}"], "path": ["fuel-logs","1"] }}},
+        { "name": "Delete", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": { "raw": "{{base_url}}/fuel-logs/1", "host": ["{{base_url}}"], "path": ["fuel-logs","1"] }}}
+      ]
+    },
+    {
+      "name": "Trip Logs",
+      "item": [
+        { "name": "List All", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/trip-logs", "host": ["{{base_url}}"], "path": ["trip-logs"] }}},
+        { "name": "List In-Progress", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/trip-logs?status=in_progress", "host": ["{{base_url}}"], "path": ["trip-logs"], "query": [{ "key": "status", "value": "in_progress" }] }}},
+        { "name": "Start Trip", "request": { "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"vehicle_id\": 1,\n  \"driver_id\": 1,\n  \"origin\": \"Paramaribo HQ\",\n  \"destination\": \"Nickerie District\",\n  \"purpose\": \"Client delivery\",\n  \"start_time\": \"2026-04-01T07:00:00\",\n  \"start_odometer\": 85000,\n  \"status\": \"in_progress\"\n}" }, "url": { "raw": "{{base_url}}/trip-logs", "host": ["{{base_url}}"], "path": ["trip-logs"] }}},
+        { "name": "End Trip (quick close)", "request": { "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"end_time\": \"2026-04-01T15:30:00\",\n  \"end_odometer\": 85350,\n  \"notes\": \"Delivery completed successfully\"\n}" }, "url": { "raw": "{{base_url}}/trip-logs/1/end", "host": ["{{base_url}}"], "path": ["trip-logs","1","end"] }}},
+        { "name": "Delete", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": { "raw": "{{base_url}}/trip-logs/1", "host": ["{{base_url}}"], "path": ["trip-logs","1"] }}}
+      ]
+    },
+    {
+      "name": "PDF Reports",
+      "item": [
+        {
+          "name": "Fleet Summary (download PDF)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Accept", "value": "application/pdf" }],
+            "url": { "raw": "{{base_url}}/reports/fleet-summary", "host": ["{{base_url}}"], "path": ["reports","fleet-summary"] },
+            "description": "Returns a PDF file. In Postman, click 'Save Response → Save to a file' to download the PDF."
+          }
+        },
+        {
+          "name": "Vehicle Report (download PDF)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Accept", "value": "application/pdf" }],
+            "url": { "raw": "{{base_url}}/reports/vehicle/1", "host": ["{{base_url}}"], "path": ["reports","vehicle","1"] },
+            "description": "Replace '1' with the vehicle ID. To download: click 'Save Response → Save to a file' in Postman."
+          }
+        },
+        {
+          "name": "Driver Report (download PDF)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Accept", "value": "application/pdf" }],
+            "url": { "raw": "{{base_url}}/reports/driver/1", "host": ["{{base_url}}"], "path": ["reports","driver","1"] },
+            "description": "Replace '1' with the driver ID. To download: click 'Save Response → Save to a file' in Postman."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Notification Logs",
+      "item": [
+        { "name": "List All", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/notification-logs", "host": ["{{base_url}}"], "path": ["notification-logs"] }}},
+        { "name": "Filter: WhatsApp", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/notification-logs?channel=whatsapp", "host": ["{{base_url}}"], "path": ["notification-logs"], "query": [{ "key": "channel", "value": "whatsapp" }] }}},
+        { "name": "Filter: Failed", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/notification-logs?status=failed", "host": ["{{base_url}}"], "path": ["notification-logs"], "query": [{ "key": "status", "value": "failed" }] }}}
+      ]
+    }
+  ]
+}

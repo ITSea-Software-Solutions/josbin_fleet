@@ -1,0 +1,9 @@
+# Root env (contains secrets)
+.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker volumes
+mysql_data/

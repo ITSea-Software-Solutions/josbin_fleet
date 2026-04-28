@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Josbin Fleet MS — User Manual</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:    #2563eb;
+      --blue-lt: #eff6ff;
+      --blue-md: #bfdbfe;
+      --slate:   #1e293b;
+      --muted:   #64748b;
+      --border:  #e2e8f0;
+      --bg:      #f8fafc;
+      --white:   #ffffff;
+      --green:   #16a34a;
+      --green-lt:#f0fdf4;
+      --orange:  #ea580c;
+      --orange-lt:#fff7ed;
+      --red:     #dc2626;
+      --red-lt:  #fef2f2;
+      --purple:  #7c3aed;
+      --purple-lt:#f5f3ff;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--slate);
+      background: var(--bg);
+    }
+
+    /* ── Layout ── */
+    .wrap { display: flex; min-height: 100vh; }
+
+    /* ── Sidebar nav ── */
+    nav {
+      width: 260px;
+      flex-shrink: 0;
+      background: var(--slate);
+      color: #cbd5e1;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      padding: 0 0 24px;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 20px 20px 16px;
+      border-bottom: 1px solid #334155;
+      margin-bottom: 12px;
+    }
+    .nav-logo-icon {
+      width: 36px; height: 36px;
+      background: var(--blue);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+    .nav-logo-text { font-size: 14px; font-weight: 700; color: #fff; line-height: 1.2; }
+    .nav-logo-sub  { font-size: 11px; color: #94a3b8; }
+
+    nav a {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 20px;
+      font-size: 13px;
+      color: #94a3b8;
+      text-decoration: none;
+      border-left: 3px solid transparent;
+      transition: all .15s;
+    }
+    nav a:hover, nav a.active {
+      color: #fff;
+      background: #334155;
+      border-left-color: var(--blue);
+    }
+    .nav-section {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #475569;
+      padding: 16px 20px 4px;
+    }
+
+    /* ── Main content ── */
+    main {
+      flex: 1;
+      padding: 48px 56px;
+      max-width: 900px;
+    }
+
+    /* ── Sections ── */
+    section { margin-bottom: 64px; scroll-margin-top: 24px; }
+
+    h1 { font-size: 30px; font-weight: 800; color: var(--slate); margin-bottom: 6px; }
+    h2 {
+      font-size: 22px; font-weight: 700; color: var(--slate);
+      margin-bottom: 16px; padding-bottom: 10px;
+      border-bottom: 2px solid var(--border);
+    }
+    h3 { font-size: 16px; font-weight: 700; color: var(--slate); margin: 24px 0 10px; }
+    p  { margin-bottom: 14px; color: #334155; }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(135deg, #1e40af 0%, #2563eb 60%, #3b82f6 100%);
+      color: white;
+      border-radius: 16px;
+      padding: 40px 44px;
+      margin-bottom: 40px;
+    }
+    .hero h1 { color: white; font-size: 28px; margin-bottom: 8px; }
+    .hero p  { color: #bfdbfe; margin: 0; font-size: 15px; }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.25);
+      color: white;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 99px;
+      margin-bottom: 16px;
+    }
+
+    /* ── Feature cards ── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 14px;
+      margin: 20px 0;
+    }
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 16px;
+    }
+    .card-icon { font-size: 22px; margin-bottom: 8px; }
+    .card-title { font-size: 13px; font-weight: 700; color: var(--slate); margin-bottom: 4px; }
+    .card-desc  { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+    /* ── Steps ── */
+    .steps { counter-reset: step; list-style: none; }
+    .steps li {
+      counter-increment: step;
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+      align-items: flex-start;
+    }
+    .steps li::before {
+      content: counter(step);
+      flex-shrink: 0;
+      width: 30px; height: 30px;
+      background: var(--blue);
+      color: white;
+      font-size: 13px;
+      font-weight: 700;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin-top: 2px;
+    }
+    .steps li div { flex: 1; }
+    .steps li strong { display: block; font-size: 14px; margin-bottom: 3px; color: var(--slate); }
+    .steps li span  { font-size: 13px; color: var(--muted); }
+
+    /* ── Info boxes ── */
+    .info, .tip, .warn, .note {
+      display: flex;
+      gap: 12px;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin: 16px 0;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .info { background: var(--blue-lt);   border: 1px solid var(--blue-md); color: #1e40af; }
+    .tip  { background: var(--green-lt);  border: 1px solid #bbf7d0;        color: #14532d; }
+    .warn { background: var(--orange-lt); border: 1px solid #fed7aa;        color: #7c2d12; }
+    .note { background: #fefce8;          border: 1px solid #fef08a;        color: #713f12; }
+    .info-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+    /* ── Tables ── */
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; }
+    th {
+      background: #f1f5f9;
+      text-align: left;
+      padding: 10px 14px;
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--muted);
+      border-bottom: 2px solid var(--border);
+    }
+    td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: #334155; vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #f8fafc; }
+
+    /* ── Screen mockup ── */
+    .screen {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 20px 0;
+      box-shadow: 0 4px 16px rgba(0,0,0,.06);
+    }
+    .screen-bar {
+      background: #1e293b;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .screen-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+    .screen-url {
+      background: #334155;
+      border-radius: 6px;
+      padding: 3px 12px;
+      font-size: 11px;
+      color: #94a3b8;
+      margin-left: 8px;
+      font-family: monospace;
+    }
+    .screen-body { padding: 20px 24px; }
+
+    /* ── Field descriptions ── */
+    .fields { margin: 12px 0; }
+    .field {
+      display: flex;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+      align-items: flex-start;
+    }
+    .field:last-child { border-bottom: none; }
+    .field-name {
+      min-width: 160px;
+      font-weight: 600;
+      color: var(--slate);
+    }
+    .field-req {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 4px;
+      margin-left: 4px;
+      vertical-align: middle;
+    }
+    .req  { background: #fee2e2; color: var(--red);   }
+    .opt  { background: #f1f5f9; color: var(--muted); }
+    .field-desc { color: #475569; flex: 1; }
+
+    /* ── Badge ── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 99px;
+    }
+    .badge-blue   { background: var(--blue-lt);   color: var(--blue);   }
+    .badge-green  { background: var(--green-lt);  color: var(--green);  }
+    .badge-orange { background: var(--orange-lt); color: var(--orange); }
+    .badge-red    { background: var(--red-lt);    color: var(--red);    }
+    .badge-purple { background: var(--purple-lt); color: var(--purple); }
+
+    /* ── Code ── */
+    code {
+      background: #f1f5f9;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: 12px;
+      font-family: 'Courier New', monospace;
+      color: #be185d;
+    }
+
+    /* ── Divider ── */
+    hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+
+    /* ── Print ── */
+    @media print {
+      nav { display: none; }
+      main { padding: 24px; max-width: 100%; }
+      .hero { background: #1e40af !important; -webkit-print-color-adjust: exact; }
+    }
+
+    @media (max-width: 768px) {
+      nav { display: none; }
+      main { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ── Sidebar ─────────────────────────────────────────────────────────── -->
+  <nav>
+    <div class="nav-logo">
+      <div class="nav-logo-icon">🚛</div>
+      <div>
+        <div class="nav-logo-text">Josbin Fleet MS</div>
+        <div class="nav-logo-sub">User Manual</div>
+      </div>
+    </div>
+
+    <div class="nav-section">Getting Started</div>
+    <a href="#overview">📋 Overview</a>
+    <a href="#login">🔐 Logging In</a>
+    <a href="#layout">🗂️ App Layout</a>
+
+    <div class="nav-section">Core Modules</div>
+    <a href="#dashboard">📊 Dashboard</a>
+    <a href="#vehicles">🚗 Vehicles</a>
+    <a href="#drivers">👤 Drivers</a>
+    <a href="#services">🔧 Services</a>
+    <a href="#insurance">🛡️ Insurance</a>
+    <a href="#inspections">📋 Inspections</a>
+    <a href="#fuel">⛽ Fuel Log</a>
+    <a href="#trips">🗺️ Trip Log</a>
+
+    <div class="nav-section">Advanced</div>
+    <a href="#reports">📄 Reports</a>
+    <a href="#notifications">🔔 Notifications</a>
+    <a href="#settings">⚙️ Settings</a>
+
+    <div class="nav-section">Reference</div>
+    <a href="#statuses">🏷️ Status Reference</a>
+    <a href="#faq">❓ FAQ</a>
+  </nav>
+
+  <!-- ── Main Content ──────────────────────────────────────────────────────── -->
+  <main>
+
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-badge">📖 User Manual — v1.0</div>
+      <h1>Josbin Fleet MS</h1>
+      <p>Complete guide to managing your fleet — vehicles, drivers, services, insurance, fuel, trips, and automated notifications.</p>
+    </div>
+
+    <!-- ── Overview ── -->
+    <section id="overview">
+      <h2>📋 Overview</h2>
+      <p>
+        <strong>Josbin Fleet MS</strong> is a web-based fleet management system designed for Josbin, Paramaribo, Suriname.
+        It gives you a single place to track every vehicle, driver, and maintenance event in your fleet — and automatically
+        alerts you before deadlines are missed.
+      </p>
+
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">🚗</div>
+          <div class="card-title">Vehicles</div>
+          <div class="card-desc">Full vehicle register with service, insurance & inspection tracking</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">👤</div>
+          <div class="card-title">Drivers</div>
+          <div class="card-desc">Driver profiles, license expiry, and vehicle assignment</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔧</div>
+          <div class="card-title">Services</div>
+          <div class="card-desc">Log every maintenance event with cost and garage details</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🛡️</div>
+          <div class="card-title">Insurance</div>
+          <div class="card-desc">Track policies, premiums, and expiry dates per vehicle</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📋</div>
+          <div class="card-title">Inspections</div>
+          <div class="card-desc">Schedule and record safety inspections with pass/fail results</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">⛽</div>
+          <div class="card-title">Fuel Log</div>
+          <div class="card-desc">Track every fill-up: litres, cost, station, and odometer</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🗺️</div>
+          <div class="card-title">Trip Log</div>
+          <div class="card-desc">Record trips from origin to destination with distance auto-calc</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔔</div>
+          <div class="card-title">Notifications</div>
+          <div class="card-desc">Auto alerts via email & WhatsApp before any deadline expires</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📄</div>
+          <div class="card-title">PDF Reports</div>
+          <div class="card-desc">Download vehicle, driver, and fleet summary reports as PDF</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">⚙️</div>
+          <div class="card-title">Settings</div>
+          <div class="card-desc">Configure notification recipients, SMTP, Twilio, and alert rules</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Login ── -->
+    <section id="login">
+      <h2>🔐 Logging In</h2>
+      <p>Open your browser and go to the app URL (e.g. <code>http://localhost:3000</code> or your production domain).</p>
+
+      <div class="screen">
+        <div class="screen-bar">
+          <div class="screen-dot" style="background:#ef4444"></div>
+          <div class="screen-dot" style="background:#f59e0b"></div>
+          <div class="screen-dot" style="background:#22c55e"></div>
+          <div class="screen-url">http://localhost:3000/login</div>
+        </div>
+        <div class="screen-body">
+          <p style="font-size:13px; color:var(--muted); margin-bottom:12px;">You will see a login form asking for:</p>
+          <div class="fields">
+            <div class="field">
+              <div class="field-name">Email Address <span class="badge req field-req">Required</span></div>
+              <div class="field-desc">Your admin email address (default: <code>admin@josbin.sr</code>)</div>
+            </div>
+            <div class="field">
+              <div class="field-name">Password <span class="badge req field-req">Required</span></div>
+              <div class="field-desc">Your password (default: <code>password</code>)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="warn">
+        <span class="info-icon">⚠️</span>
+        <div>Change the default password immediately after first login to keep the system secure.</div>
+      </div>
+
+      <p>After a successful login you are taken to the <strong>Dashboard</strong>. Your session stays active until you click <strong>Sign Out</strong> in the sidebar.</p>
+    </section>
+
+    <!-- ── Layout ── -->
+    <section id="layout">
+      <h2>🗂️ App Layout</h2>
+      <p>The app has a fixed <strong>sidebar</strong> on the left and a <strong>content area</strong> on the right.</p>
+
+      <table>
+        <thead>
+          <tr><th>Area</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Sidebar — top</strong></td><td>App logo and navigation links to every module</td></tr>
+          <tr><td><strong>Sidebar — bottom</strong></td><td>Your account name, email, and Sign Out button</td></tr>
+          <tr><td><strong>Header bar</strong></td><td>Page title and hamburger menu (on small screens)</td></tr>
+          <tr><td><strong>Content area</strong></td><td>The active page — tables, forms, charts</td></tr>
+        </tbody>
+      </table>
+
+      <div class="tip">
+        <span class="info-icon">💡</span>
+        <div>On a phone or tablet the sidebar is hidden by default. Tap the <strong>☰ menu icon</strong> in the top-left to open it.</div>
+      </div>
+    </section>
+
+    <!-- ── Dashboard ── -->
+    <section id="dashboard">
+      <h2>📊 Dashboard</h2>
+      <p>The Dashboard is the first page you see after logging in. It gives you an instant snapshot of your entire fleet.</p>
+
+      <h3>KPI Cards (top row)</h3>
+      <table>
+        <thead><tr><th>Card</th><th>What it shows</th></tr></thead>
+        <tbody>
+          <tr><td>Total Vehicles</td><td>Number of vehicles in the system</td></tr>
+          <tr><td>Active Drivers</td><td>Drivers with status set to <em>Active</em></td></tr>
+          <tr><td>Services Due</td><td>Vehicles with a service due within the next 30 days</td></tr>
+          <tr><td>Fuel Cost (month)</td><td>Total fuel spend recorded this calendar month</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Alerts Panel</h3>
+      <p>Below the KPI cards is an <strong>Upcoming Alerts</strong> panel listing every vehicle or driver that has a deadline approaching — sorted by urgency (most urgent first).</p>
+
+      <table>
+        <thead><tr><th>Alert type</th><th>Triggered when</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge badge-blue">Service Due</span></td><td>Vehicle's next service date is within 30 days</td></tr>
+          <tr><td><span class="badge badge-purple">Insurance Expiry</span></td><td>Vehicle's insurance expires within 30 days</td></tr>
+          <tr><td><span class="badge badge-orange">Inspection Due</span></td><td>Vehicle's next inspection is within 30 days</td></tr>
+          <tr><td><span class="badge badge-red">License Expiry</span></td><td>Driver's license expires within 30 days</td></tr>
+        </tbody>
+      </table>
+
+      <div class="info">
+        <span class="info-icon">ℹ️</span>
+        <div>The 30-day window is configurable. Go to <strong>Settings → Alert Rules</strong> to change it (e.g. <code>30,14,7</code> sends alerts at all three thresholds).</div>
+      </div>
+    </section>
+
+    <!-- ── Vehicles ── -->
+    <section id="vehicles">
+      <h2>🚗 Vehicles</h2>
+      <p>The Vehicles page is a full register of every vehicle in your fleet.</p>
+
+      <h3>Adding a vehicle</h3>
+      <ol class="steps">
+        <li><div><strong>Click "Add Vehicle"</strong><span>Top-right button on the Vehicles page</span></div></li>
+        <li><div><strong>Fill in the form</strong><span>See fields below</span></div></li>
+        <li><div><strong>Click "Save"</strong><span>The vehicle appears in the table immediately</span></div></li>
+      </ol>
+
+      <h3>Vehicle fields</h3>
+      <div class="fields">
+        <div class="field"><div class="field-name">Plate Number <span class="badge req field-req">Required</span></div><div class="field-desc">Official registration plate (e.g. <code>SRN-0042</code>)</div></div>
+        <div class="field"><div class="field-name">Make <span class="badge req field-req">Required</span></div><div class="field-desc">Manufacturer (e.g. Toyota, Mitsubishi)</div></div>
+        <div class="field"><div class="field-name">Model <span class="badge req field-req">Required</span></div><div class="field-desc">Model name (e.g. Hilux, L200)</div></div>
+        <div class="field"><div class="field-name">Year <span class="badge opt field-req">Optional</span></div><div class="field-desc">Year of manufacture</div></div>
+        <div class="field"><div class="field-name">VIN <span class="badge opt field-req">Optional</span></div><div class="field-desc">Vehicle Identification Number (chassis number)</div></div>
+        <div class="field"><div class="field-name">Fuel Type <span class="badge opt field-req">Optional</span></div><div class="field-desc">Petrol, Diesel, Electric, or Hybrid</div></div>
+        <div class="field"><div class="field-name">Mileage (km) <span class="badge opt field-req">Optional</span></div><div class="field-desc">Current odometer reading</div></div>
+        <div class="field"><div class="field-name">Assigned Driver <span class="badge opt field-req">Optional</span></div><div class="field-desc">Select from the driver list</div></div>
+        <div class="field"><div class="field-name">Next Service Date <span class="badge opt field-req">Optional</span></div><div class="field-desc">Date when the next scheduled service is due</div></div>
+        <div class="field"><div class="field-name">Insurance Expiry <span class="badge opt field-req">Optional</span></div><div class="field-desc">Date when current insurance policy expires</div></div>
+        <div class="field"><div class="field-name">Next Inspection Date <span class="badge opt field-req">Optional</span></div><div class="field-desc">Date when the next roadworthy inspection is due</div></div>
+        <div class="field"><div class="field-name">Status <span class="badge req field-req">Required</span></div><div class="field-desc">Active, In Service, or Inactive</div></div>
+      </div>
+
+      <h3>Editing or deleting a vehicle</h3>
+      <p>Click the <strong>✏️ Edit</strong> icon on any row to open the edit form. Click <strong>🗑️ Delete</strong> to permanently remove the vehicle. Deletion also removes all linked service, insurance, and fuel records.</p>
+
+      <div class="warn">
+        <span class="info-icon">⚠️</span>
+        <div>Deleting a vehicle is permanent and cannot be undone. Make sure you have exported any required reports first.</div>
+      </div>
+    </section>
+
+    <!-- ── Drivers ── -->
+    <section id="drivers">
+      <h2>👤 Drivers</h2>
+      <p>The Drivers page manages all driver profiles.</p>
+
+      <h3>Driver fields</h3>
+      <div class="fields">
+        <div class="field"><div class="field-name">First Name <span class="badge req field-req">Required</span></div><div class="field-desc">Driver's given name</div></div>
+        <div class="field"><div class="field-name">Last Name <span class="badge req field-req">Required</span></div><div class="field-desc">Driver's family name</div></div>
+        <div class="field"><div class="field-name">Email <span class="badge opt field-req">Optional</span></div><div class="field-desc">Contact email address</div></div>
+        <div class="field"><div class="field-name">Phone <span class="badge opt field-req">Optional</span></div><div class="field-desc">Mobile or landline number</div></div>
+        <div class="field"><div class="field-name">WhatsApp <span class="badge opt field-req">Optional</span></div><div class="field-desc">WhatsApp number with country code (e.g. <code>+59712345678</code>) — used for direct driver alerts</div></div>
+        <div class="field"><div class="field-name">License Number <span class="badge opt field-req">Optional</span></div><div class="field-desc">Official driving license number</div></div>
+        <div class="field"><div class="field-name">License Expiry <span class="badge opt field-req">Optional</span></div><div class="field-desc">Date the license expires — triggers alerts before this date</div></div>
+        <div class="field"><div class="field-name">Status <span class="badge req field-req">Required</span></div><div class="field-desc">Active, Inactive, or Suspended</div></div>
+      </div>
+
+      <div class="tip">
+        <span class="info-icon">💡</span>
+        <div>Only drivers with status <strong>Active</strong> are shown in vehicle assignment dropdowns and checked for license expiry alerts.</div>
+      </div>
+    </section>
+
+    <!-- ── Services ── -->
+    <section id="services">
+      <h2>🔧 Services</h2>
+      <p>Log every maintenance and repair event for each vehicle.</p>
+
+      <h3>Service fields</h3>
+      <div class="fields">
+        <div class="field"><div class="field-name">Vehicle <span class="badge req field-req">Required</span></div><div class="field-desc">Select the vehicle that was serviced</div></div>
+        <div class="field"><div class="field-name">Service Type <span class="badge req field-req">Required</span></div><div class="field-desc">Oil Change, Tyre Rotation, Brake Service, Engine Check, Full Service, Other</div></div>
+        <div class="field"><div class="field-name">Service Date <span class="badge req field-req">Required</span></div><div class="field-desc">Date the service was performed or scheduled</div></div>
+        <div class="field"><div class="field-name">Next Service Date <span class="badge opt field-req">Optional</span></div><div class="field-desc">Updates the vehicle's "Next Service Date" field automatically</div></div>
+        <div class="field"><div class="field-name">Mileage at Service <span class="badge opt field-req">Optional</span></div><div class="field-desc">Odometer reading when the service was done</div></div>
+        <div class="field"><div class="field-name">Garage / Provider <span class="badge opt field-req">Optional</span></div><div class="field-desc">Name of the workshop or mechanic</div></div>
+        <div class="field"><div class="field-name">Cost <span class="badge opt field-req">Optional</span></div><div class="field-desc">Total cost in SRD or local currency</div></div>
+        <div class="field"><div class="field-name">Status <span class="badge req field-req">Required</span></div><div class="field-desc">Scheduled, Completed, or Overdue</div></div>
+        <div class="field"><div class="field-name">Notes <span class="badge opt field-req">Optional</span></div><div class="field-desc">Any additional remarks or parts replaced</div></div>
+      </div>
+    </section>
+
+    <!-- ── Insurance ── -->
+    <section id="insurance">
+      <h2>🛡️ Insurance</h2>
+      <p>Track every insurance policy linked to your vehicles.</p>
+
+      <h3>Insurance fields</h3>
+      <div class="fields">
+        <div class="field"><div class="field-name">Vehicle <span class="badge req field-req">Required</span></div><div class="field-desc">The insured vehicle</div></div>
+        <div class="field"><div class="field-name">Provider <span class="badge req field-req">Required</span></div><div class="field-desc">Insurance company name (e.g. Assuria N.V.)</div></div>
+        <div class="field"><div class="field-name">Policy Number <span class="badge opt field-req">Optional</span></div><div class="field-desc">Reference number from the insurance document</div></div>
+        <div class="field"><div class="field-name">Insurance Type <span class="badge opt field-req">Optional</span></div><div class="field-desc">Third Party, Comprehensive, or Fire & Theft</div></div>
+        <div class="field"><div class="field-name">Start Date <span class="badge opt field-req">Optional</span></div><div class="field-desc">Date the policy became active</div></div>
+        <div class="field"><div class="field-name">Expiry Date <span class="badge req field-req">Required</span></div><div class="field-desc">Date the policy expires — alerts are sent before this date</div></div>
+        <div class="field"><div class="field-name">Premium Amount <span class="badge opt field-req">Optional</span></div><div class="field-desc">Annual or monthly premium cost</div></div>
+        <div class="field"><div class="field-name">Notes <span class="badge opt field-req">Optional</span></div><div class="field-desc">Coverage details or special conditions</div></div>
+      </div>
+    </section>
+
+    <!-- ── Inspections ── -->
+    <section id="inspections">
+      <h2>📋 Inspections</h2>
+      <p>Schedule and record roadworthy and safety inspections for each vehicle.</p>
+
+      <h3>Inspection fields</h3>
+      <div class="fields">
+        <div class="field"><div class="field-name">Vehicle <span class="badge req field-req">Required</span></div><div class="field-desc">The vehicle being inspected</div></div>
+        <div class="field"><div class="field-name">Inspection Date <span class="badge req field-req">Required</span></div><div class="field-desc">Date of the inspection</div></div>
+        <div class="field"><div class="field-name">Next Inspection Date <span class="badge opt field-req">Optional</span></div><div class="field-desc">Updates the vehicle's next inspection date</div></div>
+        <div class="field"><div class="field-name">Inspector / Station <span class="badge opt field-req">Optional</span></div><div class="field-desc">Name of the inspection body or officer</div></div>
+        <div class="field"><div class="field-name">Result <span class="badge opt field-req">Optional</span></div><div class="field-desc">Passed, Failed, or Pending</div></div>
+        <div class="field"><div class="field-name">Cost <span class="badge opt field-req">Optional</span></div><div class="field-desc">Inspection fee</div></div>
+        <div class="field"><div class="field-name">Notes <span class="badge opt field-req">Optional</span></div><div class="field-desc">Defects found or actions required</div></div>
+      </div>
+    </section>
+
+    <!-- ── Fuel ── -->
+    <section id="fuel">
+      <h2>⛽ Fuel Log</h2>
+      <p>Record every fuel fill-up to track consumption and costs per vehicle.</p>
+
+      <h3>Fuel log fields</h3>
+      <div class="fields">
+        <div class="field"><div class="field-name">Vehicle <span class="badge req field-req">Required</span></div><div class="field-desc">Vehicle that was refuelled</div></div>
+        <div class="field"><div class="field-name">Driver <span class="badge opt field-req">Optional</span></div><div class="field-desc">Driver who refuelled</div></div>
+        <div class="field"><div class="field-name">Date <span class="badge req field-req">Required</span></div><div class="field-desc">Date of the fill-up</div></div>
+        <div class="field"><div class="field-name">Litres <span class="badge req field-req">Required</span></div><div class="field-desc">Amount of fuel added in litres</div></div>
+        <div class="field"><div class="field-name">Cost per Litre <span class="badge opt field-req">Optional</span></div><div class="field-desc">Price per litre at the pump</div></div>
+        <div class="field"><div class="field-name">Total Cost <span class="badge opt field-req">Optional</span></div><div class="field-desc">Total amount paid</div></div>
+        <div class="field"><div class="field-name">Odometer (km) <span class="badge opt field-req">Optional</span></div><div class="field-desc">Odometer reading at fill-up — used to calculate fuel efficiency</div></div>
+        <div class="field"><div class="field-name">Station <span class="badge opt field-req">Optional</span></div><div class="field-desc">Name or location of the fuel station</div></div>
+        <div class="field"><div class="field-name">Full Tank <span class="badge opt field-req">Optional</span></div><div class="field-desc">Toggle on if the tank was filled to full — improves consumption calculation</div></div>
+      </div>
+    </section>
+
+    <!-- ── Trips ── -->
+    <section id="trips">
+      <h2>🗺️ Trip Log</h2>
+      <p>Log every trip to track vehicle usage and driver activity.</p>
+
+      <h3>Starting a trip</h3>
+      <ol class="steps">
+        <li><div><strong>Click "Start Trip"</strong><span>On the Trip Log page</span></div></li>
+        <li><div><strong>Select Vehicle and Driver</strong><span>Choose from the dropdowns</span></div></li>
+        <li><div><strong>Enter origin, destination, purpose, and start odometer</strong><span>All key details for the trip</span></div></li>
+        <li><div><strong>Click "Save"</strong><span>Trip status is set to <em>In Progress</em></span></div></li>
+      </ol>
+
+      <h3>Ending a trip</h3>
+      <ol class="steps">
+        <li><div><strong>Find the active trip in the table</strong><span>Status shows <em>In Progress</em></span></div></li>
+        <li><div><strong>Click "End Trip"</strong><span>A form opens asking for the end odometer and any notes</span></div></li>
+        <li><div><strong>Enter end odometer and click "Save"</strong><span>Distance is calculated automatically</span></div></li>
+      </ol>
+
+      <h3>Trip fields</h3>
+      <div class="fields">
+        <div class="field"><div class="field-name">Vehicle <span class="badge req field-req">Required</span></div><div class="field-desc">Vehicle used for the trip</div></div>
+        <div class="field"><div class="field-name">Driver <span class="badge opt field-req">Optional</span></div><div class="field-desc">Driver who made the trip</div></div>
+        <div class="field"><div class="field-name">Origin <span class="badge req field-req">Required</span></div><div class="field-desc">Starting location</div></div>
+        <div class="field"><div class="field-name">Destination <span class="badge req field-req">Required</span></div><div class="field-desc">End location</div></div>
+        <div class="field"><div class="field-name">Purpose <span class="badge opt field-req">Optional</span></div><div class="field-desc">Reason for the trip (delivery, client visit, etc.)</div></div>
+        <div class="field"><div class="field-name">Start Odometer <span class="badge opt field-req">Optional</span></div><div class="field-desc">Odometer reading at trip start (km)</div></div>
+        <div class="field"><div class="field-name">End Odometer <span class="badge opt field-req">Optional</span></div><div class="field-desc">Odometer reading at trip end — distance is auto-calculated</div></div>
+        <div class="field"><div class="field-name">Notes <span class="badge opt field-req">Optional</span></div><div class="field-desc">Any remarks about the trip</div></div>
+      </div>
+    </section>
+
+    <!-- ── Reports ── -->
+    <section id="reports">
+      <h2>📄 Reports</h2>
+      <p>Generate and download PDF reports directly from the app.</p>
+
+      <table>
+        <thead><tr><th>Report</th><th>Contents</th><th>How to generate</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Vehicle Report</strong></td>
+            <td>Vehicle details, service history, insurance records, fuel fills, and trips</td>
+            <td>Go to Reports → select a vehicle → click <em>Download Vehicle Report</em></td>
+          </tr>
+          <tr>
+            <td><strong>Driver Report</strong></td>
+            <td>Driver profile, trip history, and fuel records</td>
+            <td>Go to Reports → select a driver → click <em>Download Driver Report</em></td>
+          </tr>
+          <tr>
+            <td><strong>Fleet Summary</strong></td>
+            <td>All vehicles in a landscape table with status indicators for service, insurance, and inspection</td>
+            <td>Go to Reports → click <em>Download Fleet Summary</em></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="tip">
+        <span class="info-icon">💡</span>
+        <div>Reports open in a new browser tab as a PDF. Use your browser's print dialog (<strong>Ctrl+P</strong> / <strong>⌘+P</strong>) to print or save to file.</div>
+      </div>
+    </section>
+
+    <!-- ── Notifications ── -->
+    <section id="notifications">
+      <h2>🔔 Notifications</h2>
+      <p>The Notifications page lets you view alert history, trigger scheduled alerts on demand, and send custom one-off notifications.</p>
+
+      <h3>Summary cards</h3>
+      <p>Four cards at the top show total <strong>Sent</strong>, <strong>Failed</strong>, <strong>Via Email</strong>, and <strong>Via WhatsApp</strong> counts from the full log history.</p>
+
+      <h3>Scheduled Notification Check</h3>
+      <p>The <strong>Scheduled Notification Check</strong> panel shows a live preview of all upcoming deadlines that fall within your configured alert thresholds. It shows which channel (email/WhatsApp) will be used and the configured recipient.</p>
+
+      <ol class="steps">
+        <li><div><strong>Review the preview table</strong><span>Lists all vehicles/drivers with deadlines due soon, sorted by urgency</span></div></li>
+        <li><div><strong>Click "Run Notification Check"</strong><span>Sends alerts immediately through the configured channels</span></div></li>
+        <li><div><strong>See the result</strong><span>Shows how many were sent and how many failed</span></div></li>
+      </ol>
+
+      <div class="info">
+        <span class="info-icon">ℹ️</span>
+        <div>Notifications also run <strong>automatically every day at 08:00</strong> — you do not need to run them manually unless you want to test or send immediately.</div>
+      </div>
+
+      <h3>Send Manual Notification</h3>
+      <p>Click the <strong>"Send Manual Notification"</strong> button (top-right) to open the compose dialog and send a fully custom notification to any recipient.</p>
+
+      <div class="screen">
+        <div class="screen-bar">
+          <div class="screen-dot" style="background:#ef4444"></div>
+          <div class="screen-dot" style="background:#f59e0b"></div>
+          <div class="screen-dot" style="background:#22c55e"></div>
+          <div class="screen-url">Send Manual Notification — dialog</div>
+        </div>
+        <div class="screen-body">
+          <div class="fields">
+            <div class="field"><div class="field-name">Channel</div><div class="field-desc">Choose <strong>Email</strong> or <strong>WhatsApp</strong> — the recipient field auto-fills from your settings</div></div>
+            <div class="field"><div class="field-name">Recipient</div><div class="field-desc">Pre-filled with admin email or WhatsApp. You can type any address or number</div></div>
+            <div class="field"><div class="field-name">Subject</div><div class="field-desc">Email subject line (only shown when Email channel is selected)</div></div>
+            <div class="field"><div class="field-name">Type</div><div class="field-desc">Categorise the notification: General, Service, Insurance, Inspection, or License</div></div>
+            <div class="field"><div class="field-name">Quick-fill</div><div class="field-desc">Click any item in the <em>upcoming deadlines</em> list to auto-populate the subject and message</div></div>
+            <div class="field"><div class="field-name">Message</div><div class="field-desc">The full notification text (up to 2000 characters)</div></div>
+          </div>
+        </div>
+      </div>
+
+      <ol class="steps">
+        <li><div><strong>Select channel</strong><span>Email or WhatsApp</span></div></li>
+        <li><div><strong>Confirm or change recipient</strong><span>Any email or phone number</span></div></li>
+        <li><div><strong>Optional: click a quick-fill item</strong><span>Auto-fills message from an upcoming deadline</span></div></li>
+        <li><div><strong>Edit the message</strong><span>Customise as needed</span></div></li>
+        <li><div><strong>Click "Send Notification"</strong><span>Result shown inline — success or error</span></div></li>
+      </ol>
+
+      <h3>Notification History</h3>
+      <p>The log table at the bottom shows every notification ever sent — type, channel, recipient, message, status, and timestamp. Use the <strong>All / Email / WhatsApp</strong> filter to narrow the list.</p>
+
+      <table>
+        <thead><tr><th>Status</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge badge-green">✓ Sent</span></td><td>Notification delivered successfully</td></tr>
+          <tr><td><span class="badge badge-red">✗ Failed</span></td><td>Delivery failed — check SMTP or Twilio credentials in Settings</td></tr>
+          <tr><td><span class="badge badge-orange">⏳ Pending</span></td><td>Queued but not yet delivered</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ── Settings ── -->
+    <section id="settings">
+      <h2>⚙️ Settings</h2>
+      <p>Configure who receives notifications, how they are delivered, and which events trigger alerts.</p>
+
+      <h3>Notification Recipients</h3>
+      <div class="fields">
+        <div class="field"><div class="field-name">Admin Email</div><div class="field-desc">Email address where all fleet alert emails are sent</div></div>
+        <div class="field"><div class="field-name">Admin WhatsApp</div><div class="field-desc">WhatsApp number for all alert messages (include country code, e.g. <code>+59712345678</code>)</div></div>
+        <div class="field"><div class="field-name">Email Notifications</div><div class="field-desc">Toggle to enable or disable the email channel entirely</div></div>
+        <div class="field"><div class="field-name">WhatsApp Notifications</div><div class="field-desc">Toggle to enable or disable the WhatsApp channel entirely</div></div>
+      </div>
+
+      <h3>Alert Rules</h3>
+      <div class="fields">
+        <div class="field"><div class="field-name">Alert Days</div><div class="field-desc">Comma-separated days before a deadline to send alerts. Example: <code>30,14,7</code> sends three alerts — 30, 14, and 7 days before each deadline</div></div>
+        <div class="field"><div class="field-name">Service Due Alerts</div><div class="field-desc">Toggle alerts for upcoming vehicle service dates</div></div>
+        <div class="field"><div class="field-name">Insurance Expiry Alerts</div><div class="field-desc">Toggle alerts for vehicle insurance expiry</div></div>
+        <div class="field"><div class="field-name">Inspection Due Alerts</div><div class="field-desc">Toggle alerts for vehicle inspections</div></div>
+        <div class="field"><div class="field-name">Driver License Alerts</div><div class="field-desc">Toggle alerts for driver license expiry</div></div>
+      </div>
+
+      <h3>Email (SMTP)</h3>
+      <div class="fields">
+        <div class="field"><div class="field-name">SMTP Host</div><div class="field-desc">Your mail server hostname (e.g. <code>smtp.mailtrap.io</code> for testing)</div></div>
+        <div class="field"><div class="field-name">SMTP Port</div><div class="field-desc">Usually <code>587</code> (TLS) or <code>465</code> (SSL)</div></div>
+        <div class="field"><div class="field-name">SMTP Username</div><div class="field-desc">Your email account username</div></div>
+        <div class="field"><div class="field-name">SMTP Password</div><div class="field-desc">Your email account password (hidden by default)</div></div>
+        <div class="field"><div class="field-name">From Address</div><div class="field-desc">The "from" email shown to recipients (e.g. <code>noreply@josbin.sr</code>)</div></div>
+      </div>
+
+      <div class="tip">
+        <span class="info-icon">💡</span>
+        <div>Use <a href="https://mailtrap.io" target="_blank">Mailtrap</a> for testing — it captures all outgoing emails without delivering them, so you can safely test without spamming real inboxes.</div>
+      </div>
+
+      <h3>WhatsApp via Twilio</h3>
+      <div class="fields">
+        <div class="field"><div class="field-name">Twilio Account SID</div><div class="field-desc">Your Twilio Account SID from the Twilio Console (starts with <code>AC</code>)</div></div>
+        <div class="field"><div class="field-name">Twilio Auth Token</div><div class="field-desc">Your Twilio Auth Token (hidden by default)</div></div>
+        <div class="field"><div class="field-name">Twilio WhatsApp Number</div><div class="field-desc">The approved sender number (sandbox: <code>+14155238886</code>)</div></div>
+      </div>
+
+      <div class="note">
+        <span class="info-icon">📌</span>
+        <div><strong>Twilio Sandbox:</strong> For testing, the recipient must first send <code>join &lt;sandbox-code&gt;</code> to <strong>+1 415 523 8886</strong> to opt in before they can receive messages.</div>
+      </div>
+
+      <h3>Testing your configuration</h3>
+      <p>After filling in SMTP or Twilio settings, click <strong>Save Settings</strong> first, then use the test buttons:</p>
+      <ul style="padding-left:20px; font-size:14px; color:#334155;">
+        <li style="margin-bottom:6px;"><strong>Send Test Email</strong> — sends a test message to the configured admin email</li>
+        <li><strong>Send Test WhatsApp</strong> — sends a test message to the configured admin WhatsApp number</li>
+      </ul>
+    </section>
+
+    <!-- ── Status Reference ── -->
+    <section id="statuses">
+      <h2>🏷️ Status Reference</h2>
+
+      <h3>Vehicle status</h3>
+      <table>
+        <thead><tr><th>Status</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge badge-green">Active</span></td><td>Vehicle is in service and available for trips</td></tr>
+          <tr><td><span class="badge badge-orange">In Service</span></td><td>Vehicle is currently undergoing maintenance</td></tr>
+          <tr><td><span class="badge" style="background:#f1f5f9;color:#64748b;">Inactive</span></td><td>Vehicle is off-road or decommissioned</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Driver status</h3>
+      <table>
+        <thead><tr><th>Status</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge badge-green">Active</span></td><td>Available for vehicle assignment</td></tr>
+          <tr><td><span class="badge" style="background:#f1f5f9;color:#64748b;">Inactive</span></td><td>No longer employed or unavailable</td></tr>
+          <tr><td><span class="badge badge-red">Suspended</span></td><td>Temporarily barred from driving (e.g. pending investigation)</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Service status</h3>
+      <table>
+        <thead><tr><th>Status</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge badge-blue">Scheduled</span></td><td>Service is booked but not yet done</td></tr>
+          <tr><td><span class="badge badge-green">Completed</span></td><td>Service has been performed</td></tr>
+          <tr><td><span class="badge badge-red">Overdue</span></td><td>Service date has passed without completion</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Inspection result</h3>
+      <table>
+        <thead><tr><th>Result</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge badge-green">Passed</span></td><td>Vehicle meets roadworthy requirements</td></tr>
+          <tr><td><span class="badge badge-red">Failed</span></td><td>Vehicle did not meet requirements — action required</td></tr>
+          <tr><td><span class="badge badge-orange">Pending</span></td><td>Inspection scheduled but result not yet recorded</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ── FAQ ── -->
+    <section id="faq">
+      <h2>❓ Frequently Asked Questions</h2>
+
+      <h3>I'm not receiving email notifications — what do I check?</h3>
+      <p>Go to <strong>Settings → Email (SMTP)</strong> and verify all fields are filled in correctly. Click <strong>Save Settings</strong>, then <strong>Send Test Email</strong>. If it fails, the error message will tell you what's wrong (wrong host, bad credentials, etc.).</p>
+
+      <h3>WhatsApp messages aren't arriving — why?</h3>
+      <p>If you are using the Twilio sandbox, the recipient must have first opted in by sending <code>join &lt;your-sandbox-code&gt;</code> to <code>+14155238886</code>. Also verify your Twilio Account SID, Auth Token, and sender number in Settings.</p>
+
+      <h3>Why do I see old alerts on the Dashboard even after renewing a vehicle's insurance?</h3>
+      <p>After renewing, open the vehicle record and update the <strong>Insurance Expiry</strong> date to the new expiry date. The Dashboard alerts recalculate live based on the dates stored in the system.</p>
+
+      <h3>Can I assign the same vehicle to multiple drivers?</h3>
+      <p>No — a vehicle can have one assigned driver at a time. To change the driver, edit the vehicle and select a new driver from the dropdown.</p>
+
+      <h3>How do I reset everything to start fresh?</h3>
+      <p>A system administrator can run the following command on the server:</p>
+      <code style="display:block; padding:10px 14px; font-size:12px; margin:8px 0;">
+        docker exec josbin_fleet_ms_backend php artisan migrate:fresh --seed
+      </code>
+      <div class="warn">
+        <span class="info-icon">⚠️</span>
+        <div>This deletes <strong>all data</strong> and replaces it with demo data. Only use this on a test environment.</div>
+      </div>
+
+      <h3>How do I add a second admin user?</h3>
+      <p>Currently user management is done through the API or database. A system administrator can create a new user via phpMyAdmin (<code>http://localhost:8081</code>) or by running:</p>
+      <code style="display:block; padding:10px 14px; font-size:12px; margin:8px 0;">
+        docker exec -it josbin_fleet_ms_backend php artisan tinker
+      </code>
+      <p style="margin-top:8px; font-size:13px;">Then in the tinker shell:</p>
+      <code style="display:block; padding:10px 14px; font-size:12px;">
+        App\Models\User::create(['name' => 'New Admin', 'email' => 'new@josbin.sr', 'password' => 'yourpassword']);
+      </code>
+    </section>
+
+    <hr />
+    <p style="font-size:12px; color:var(--muted); text-align:center; padding-bottom:24px;">
+      Josbin Fleet MS — User Manual v1.0 &nbsp;·&nbsp; Built for Josbin, Paramaribo, Suriname
+    </p>
+
+  </main>
+</div>
+
+<script>
+  // Highlight active nav link based on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks  = document.querySelectorAll('nav a[href^="#"]');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`nav a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

@@ -3,12 +3,6 @@ set -e
 
 echo "==> Josbin Fleet MS backend starting..."
 
-# Install PHP dependencies if vendor is missing or outdated
-if [ ! -f "vendor/autoload.php" ]; then
-  echo "==> Running composer install..."
-  composer install --no-interaction --optimize-autoloader --no-dev
-fi
-
 # Write a .env from Docker environment variables so that php artisan serve
 # child processes (which don't inherit Docker env vars) pick up the right config
 echo "==> Writing .env from environment..."
